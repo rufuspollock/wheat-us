@@ -1,0 +1,61 @@
+{
+  "name": "wheat-us",
+  "name": "us-wheat-production-and-prices", 
+  "title": "US Wheat Production and Prices",
+  "sources": [{
+    "name": "US Department of Agriculture",
+    "url": "http://www.ers.usda.gov/data/wheat/"
+  }],
+  "temporal": "start=1866;",
+  "licenses": [{
+    "id": "odc-pddl",
+    "name": "Public Domain Dedication and License",
+    "version": "1.0",
+    "url": "http://opendatacommons.org/licenses/pddl/1.0/"
+  }],
+  "maintainers": [{
+    "name": "Rufus Pollock", 
+    "email": "rufus.pollock@okfn.org"
+  }],
+  "keywords": ["US", "Agriculture", "Wheat", "Prices", "Indicator"], 
+  "resources": [
+    {
+      "path": "data.csv",
+      "schema": {
+        "fields": [
+          {
+            "id": "Year",
+            "description": "The year",
+            "format": "yyyy",
+            "type": "date"
+          },
+          {
+            "id": "Planted",
+            "description": "Planted acreage in millions",
+            "type": "number"
+          },
+          {
+            "id": "Harvested",
+            "description": "Harvested acreage in millions",
+            "type": "number"
+          },
+          {
+            "id": "Production",
+            "description": "Production in millions of bushels",
+            "type": "number"
+          },
+          {
+            "id": "Yield",
+            "description": "Bushels per acre",
+            "type": "number"
+          },
+          {
+            "id": "Price",
+            "description": "Weighted-average farm price ($ per bushel) (nominal prices)",
+            "type": "number"
+          }
+        ]
+      }
+    }
+  ]
+}
