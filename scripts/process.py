@@ -1,16 +1,17 @@
 import os
 import urllib
 
-import econ.data.tabular
-import econ.data.misc
-import econ.data.swiss as tl
+import datautil.tabular
+import datautil.misc
 
 base_page = 'http://www.ers.usda.gov/Data/Wheat/'
 data_index = 'http://www.ers.usda.gov/Data/Wheat/WheatYearbook.aspx'
 
 recent_data_url = 'http://www.ers.usda.gov/data/wheat/yearbook/WheatYearbookTables-Recent.xls'
-all_data_url = 'http://www.ers.usda.gov/data/wheat/yearbook/WheatYearbookTables-Full.xls'
-all_fn = 'data_original.xls'
+all_data_url = 'http://www.ers.usda.gov/datafiles/Wheat_Wheat_Data/Yearbook_Tables/US_Acreage_Production_Yield_and_Farm_Price/wheatyearbooktable01full.xls'
+if not os.path.exists('archive'):
+    os.makedirs('archive')
+all_fn = 'archive/data_original.xls'
 
 VERBOSE = True
 
@@ -21,12 +22,13 @@ def download():
     urllib.urlretrieve(all_data_url, all_fn)
 
 def info():
+    import datautil.swiss as tl
     print tl.xls_info(all_fn)
     print tl.xls_sheet_info(all_fn, 0)
     # print tl.xls_sheet_info(all_fn, 1)
 
 def get_table_index():
-    reader = econ.data.tabular.XlsReader()
+    reader = datautil.tabular.XlsReader()
     tabdata = reader.read(file(all_fn))
     data = [ row[0] for row in tabdata.data ]
     table_names = filter(lambda x: x.startswith('Table '), data)
@@ -34,7 +36,7 @@ def get_table_index():
 
 class SheetParser(object):
     def get_sheet(self, index):
-        reader = econ.data.tabular.XlsReader()
+        reader = datautil.tabular.XlsReader()
         tabdata = reader.read(file(all_fn), index)
         return tabdata.data
 
@@ -46,15 +48,15 @@ class SheetParser(object):
             if value == '--':
                 return ''
             else:
-                return econ.data.misc.floatify(value)
+                return datautil.misc.floatify(value)
         out = [year] + [ clean(value) for value in line[1:] ]
         return out
 
     def extract_table_1(self):
-        data = self.get_sheet(1)
-        headings = ['Market Year', 'Planted acreage (millions)',
-            'Harvested acreage (millions)', 'Production (millions of bushels)',
-            'Yield (bushels per acre)', 'Weighted-average farm price ($ per bushel)'
+        data = self.get_sheet(0)
+        headings = ['Year', 'Planted',
+            'Harvested', 'Production',
+            'Yield', 'Price'
             ]
         # remove headings and footnotes
         data = data[3:-3]
@@ -71,7 +73,7 @@ class SheetParser(object):
             return out
 
         for section in sections:
-            results[section[0][0]] = econ.data.tabular.TabularData(
+            results[section[0][0]] = datautil.tabular.TabularData(
                     data=parse_section(section),
                     header=headings)
         return results
@@ -100,11 +102,11 @@ def main():
     # sheet 1 is special since it contains multiple items
     parser = SheetParser()
     tables = parser.extract_table_1()
-    writer = econ.data.tabular.CsvWriter()
+    writer = datautil.tabular.CsvWriter()
     table_list = []
     for name in tables:
         fn = 'table_1_%s.csv' % name.lower().replace(' ', '_')
-        writer.write(file(fn, 'wb'), tables[name])
+        writer.write(tables[name], file(fn, 'wb'))
         title = index[0] + ' (%s)' % name
         table_list.append((fn, title))
     # finally copy one table to default position
