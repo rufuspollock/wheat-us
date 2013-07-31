@@ -1,6 +1,5 @@
 {
   "name": "wheat-us",
-  "name": "us-wheat-production-and-prices", 
   "title": "US Wheat Production and Prices",
   "sources": [{
     "name": "US Department of Agriculture",
@@ -55,6 +54,38 @@
             "type": "number"
           }
         ]
+      }
+    }
+  ],
+  "views": [
+    {
+      "id": "graph-price",
+      "label": "Price",
+      "type": "Graph",
+      "state": {
+        "group": "Year",
+        "graphType": "lines",
+        "series": [ "Price" ]
+      }
+    },
+    {
+      "id": "graph-yield",
+      "label": "Yield",
+      "type": "Graph",
+      "state": {
+        "group": "Year",
+        "graphType": "lines",
+        "series": [ "Yield" ]
+      }
+    },
+    {
+      "id": "graph-prod",
+      "label": "Production",
+      "type": "Graph",
+      "state": {
+        "group": "Year",
+        "graphType": "lines",
+        "series": [ "Production" ]
       }
     }
   ]
