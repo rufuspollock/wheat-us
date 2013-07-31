@@ -1,4 +1,4 @@
-Market Year,Planted acreage (millions),Harvested acreage (millions),Production (millions of bushels),Yield (bushels per acre),Weighted-average farm price ($ per bushel)
+Year,Planted,Harvested,Production,Yield,Price
 1866,,15.408,170.0,11.0,
 1867,,16.738,211.0,12.6,
 1868,,19.14,246.0,12.9,
